@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_impl_glut.cpp" />
+    <ClCompile Include="Particles.cpp" />
+    <ClCompile Include="Quad.cpp" />
+    <ClCompile Include="LoadMesh.cpp" />
+    <ClCompile Include="LoadTexture.cpp" />
+    <ClCompile Include="zc_glutInit.cpp">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="InitShader.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cube.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imconfig.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_impl_glut.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_internal.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMesh.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="InitShader.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_truetype.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_rect_pack.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\stb_textedit.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadTexture.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zc_glutInit.h">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="zc_moveControl.h">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zc_resource_manager.h">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="zc_camera.h">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="zc_debug.h">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\zc_explode_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\zc_explode_gs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\zc_explode_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\cube_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\cube_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\mesh_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\mesh_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\particle_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\particle_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\quad_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\quad_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{3541426b-f9e4-444f-aaa7-0218b4b6663c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{07e4cab6-767a-47de-bd04-66df76c1d74f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\ZhiwenLibs">
+      <UniqueIdentifier>{be50773a-a8d4-4724-b2b1-8b10b036990e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

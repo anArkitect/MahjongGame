@@ -1,0 +1,27 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Imgui demo.vcxproj, Mahjong.vcxproj, TextureAndAlpha.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  main.cpp
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\zc_resource_manager.h(100): warning C4838: conversion from 'int' to 'GLuint' requires a narrowing conversion
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(353): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(354): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(421): warning C4018: '<': signed/unsigned mismatch
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(438): warning C4101: 'tileShaderPrograms': unreferenced local variable
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(548): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(549): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(555): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(556): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(575): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  imgui_impl_glut.cpp
+  imgui_draw.cpp
+  imgui_demo.cpp
+  imgui.cpp
+  Quad.cpp
+  Particles.cpp
+  LoadTexture.cpp
+  InitShader.cpp
+  Cube.cpp
+  MahjongProj.vcxproj -> C:\Users\Zhiwen Cao\Documents\PURDUE\CGT520\MahjongProject\Debug\MahjongProj.exe
+  MahjongProj.vcxproj -> C:\Users\Zhiwen Cao\Documents\PURDUE\CGT520\MahjongProject\Debug\MahjongProj.pdb (Partial PDB)

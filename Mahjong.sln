@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MahjongProj", "MahjongProj.vcxproj", "{4C142A94-D8FC-4895-91AD-37A7FDE8A66C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C142A94-D8FC-4895-91AD-37A7FDE8A66C}.Debug|x86.ActiveCfg = Debug|Win32
+		{4C142A94-D8FC-4895-91AD-37A7FDE8A66C}.Debug|x86.Build.0 = Debug|Win32
+		{4C142A94-D8FC-4895-91AD-37A7FDE8A66C}.Release|x86.ActiveCfg = Release|Win32
+		{4C142A94-D8FC-4895-91AD-37A7FDE8A66C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B4B46C16-DC3D-41B6-998A-640D57F7C7CF}
+	EndGlobalSection
+EndGlobal
