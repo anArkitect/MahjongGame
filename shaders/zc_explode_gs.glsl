@@ -4,10 +4,16 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
-// get the 
+
+
 in VS_OUT {
+		vec3 FragPos;
 		vec2 texCoords;
+		vec3 Normal;
 } gs_in[];
+
+out vec3 Normal;
+out vec3 FragPos;
 
 out vec2 TexCoords;
 
@@ -32,14 +38,22 @@ vec3 GetNormal()
 }
 
 void main() {
+	
+
 		vec3 normal = GetNormal();
+
 		if (explosionStatus)
 			gl_Position = explode(gl_in[0].gl_Position, normal);
 		else
 			gl_Position = gl_in[0].gl_Position;	
 		TexCoords = gs_in[0].texCoords;
 		if (length(direction) <= 1)
+		{
+			Normal = gs_in[0].Normal;
+			FragPos = gs_in[0].FragPos;
 			EmitVertex();
+		}
+			
 		
 		if (explosionStatus) 
 			gl_Position = explode(gl_in[1].gl_Position, normal);
@@ -47,7 +61,12 @@ void main() {
 			gl_Position = gl_in[1].gl_Position;	
 		TexCoords = gs_in[1].texCoords;
 		if (length(direction) <= 1)
+		{
+			Normal = gs_in[1].Normal;
+			FragPos = gs_in[1].FragPos;
 			EmitVertex();
+		}
+
 
 		if (explosionStatus) 
 			gl_Position = explode(gl_in[2].gl_Position, normal);
@@ -55,7 +74,11 @@ void main() {
 			gl_Position = gl_in[2].gl_Position;	
 		TexCoords = gs_in[2].texCoords;
 		if (length(direction) <= 1)
+		{
+			Normal = gs_in[2].Normal;
+			FragPos = gs_in[2].FragPos;
 			EmitVertex();
+		}
 
 		EndPrimitive();
 }

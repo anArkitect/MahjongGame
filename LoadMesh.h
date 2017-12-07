@@ -19,13 +19,15 @@ struct MeshData
    aiVector3D mBbMin, mBbMax;
    MeshData::MeshData(): mVao(-1), mVboVerts(-1), mVboNormals(-1), mVboTexCoords(-1), mIndexBuffer(-1),
 						 mScaleFactor(0.0f), mNumIndices(0), mScene(NULL), drawEnabled(true), 
-						 holdStatus(false), explosionStatus(false), exploStartTimeAllowed(false), exploStartTime(0){}
+						 holdStatus(false), explosionStatus(false), exploStartTimeAllowed(false), 
+						 hoverOver(false), exploStartTime(0){}
       
    // Zhiwen
    std::string tileContent;
    float exploStartTime;
    bool drawEnabled;
    bool holdStatus;
+   bool hoverOver;
    bool explosionStatus;
    bool exploStartTimeAllowed;
    

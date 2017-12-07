@@ -1,16 +1,16 @@
 #version 400            
-uniform mat4 PVM;
-uniform mat4 M;
-uniform mat4 V;
+uniform mat4 PVM;//
+uniform mat4 M;//
+uniform mat4 V;//
 
 uniform float time;
 uniform float slider;
 
-in vec3 pos_attrib; //in object space
-in vec2 tex_coord_attrib;
-in vec3 normal_attrib; //in object space
+in vec3 pos_attrib; //in object space//
+in vec2 tex_coord_attrib;//
+in vec3 normal_attrib; //in object space//
 
-out vec2 tex_coord;
+out vec2 tex_coord;//
 out vec3 normal; 
 out vec3 p; 
 out vec3 eye;

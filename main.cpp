@@ -27,6 +27,7 @@
 #include "zc_moveControl.h"
 #include "zc_resource_manager.h"
 #include "zc_camera.h"
+#include "zc_diamond.h"
 
 
 const float SCR_WIDTH = 1200.0f;
@@ -34,6 +35,9 @@ const float SCR_HEIGHT = 800.0f;
 
 static const std::string cube_name = "cubemap";
 GLuint cubemap_id = -1; //Texture id for cubemap
+
+// shader
+float shininess = 32.0f;
 
 // set the camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -46,6 +50,7 @@ static bool cameraMoveEnabled = false;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
 
 
 //Quadrilateral
@@ -86,8 +91,10 @@ void draw_gui()
    ImGui::Checkbox("Draw cube", &cube_enabled); ImGui::SameLine();
    ImGui::Checkbox("Draw particles", &particles_enabled); 
 
-   ImGui::SliderFloat("View angle", &camangle, -180.0f, +180.0f);
-   ImGui::SliderFloat("Cam Z", &campos[2], 0.0f, 5.0f);
+   //ImGui::SliderFloat("View angle", &camangle, -180.0f, +180.0f);
+   //ImGui::SliderFloat("Cam Z", &campos[2], 0.0f, 5.0f);
+   ImGui::SliderFloat("Shininess", &shininess, 10.0f, 50.0f);
+
    /*
    static float slider = 0.0;
 
@@ -150,6 +157,8 @@ void draw_gui()
    */
    ImGui::End();
 
+
+
    ImGui::Render();
    first_frame = false;
 }
@@ -159,57 +168,56 @@ void draw_gui()
 void draw_fish(const glm::mat4& P, const glm::mat4& V, float x, float y, float z, int tileOrder, bool explosionSatus)
 {
 
-
    glm::mat4 T = glm::translate(glm::vec3(x, y, z));
    glm::mat4 S = glm::scale(glm::vec3(0.5f*tileData[tileOrder].mScaleFactor));
    glm::mat4 R = glm::rotate(-90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
    glm::mat4 M = T*S*R;
-   
+   glm::mat4 transInverModel = glm::transpose(glm::inverse(M));
+
+
    glUseProgram(tileShaderPrograms[tileOrder]);
    glActiveTexture(GL_TEXTURE0);
    glBindTexture(GL_TEXTURE_2D, textureIDs[tileOrder]);
-   int tex_loc = glGetUniformLocation(tileShaderPrograms[tileOrder], "tex");
-   if (tex_loc != -1)
-   {
-      glUniform1i(tex_loc, 0); // we bound our texture to texture unit 0
-   }
+   setInt(tileShaderPrograms[tileOrder], "material.tex", 0);
 
    glActiveTexture(GL_TEXTURE1);
    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_id);
-   int cube_loc = glGetUniformLocation(tileShaderPrograms[tileOrder], "cubemap");
-   if (cube_loc != -1)
-   {
-      glUniform1i(cube_loc, 1); // we bound our texture to texture unit 1
-   }
+   setInt(tileShaderPrograms[tileOrder], "material.cubemap", 1);
 
-   int PVM_loc = glGetUniformLocation(tileShaderPrograms[tileOrder], "PVM");
-   if (PVM_loc != -1)
-   {
-      glm::mat4 PVM = P*V*M;
-      glUniformMatrix4fv(PVM_loc, 1, false, glm::value_ptr(PVM));
-   }
+   setMat4(tileShaderPrograms[tileOrder], "PVM", P*V*M);
+   setMat4(tileShaderPrograms[tileOrder], "M", M);
+   setMat4(tileShaderPrograms[tileOrder], "transInverModel", transInverModel);
+   setMat4(tileShaderPrograms[tileOrder], "V", V);
+   setBool(tileShaderPrograms[tileOrder], "explosionStatus", explosionSatus);
+   setBool(tileShaderPrograms[tileOrder], "holdStatus", tileData[tileOrder].holdStatus);
+   if (tileOrder == tileSelection)
+		setBool(tileShaderPrograms[tileOrder], "hoverOver", true);
+   else
+	   setBool(tileShaderPrograms[tileOrder], "hoverOver", false);
 
-   int M_loc = glGetUniformLocation(tileShaderPrograms[tileOrder], "M");
-   if (M_loc != -1)
-   {
-      glUniformMatrix4fv(M_loc, 1, false, glm::value_ptr(M));
-   }
+   setFloat(tileShaderPrograms[tileOrder], "material.shininess", shininess);
+   setVec3(tileShaderPrograms[tileOrder], "pointLights[0].position", glm::vec3(-1.5,  2.0, 0.0));
+   setVec3(tileShaderPrograms[tileOrder], "pointLights[1].position", glm::vec3(-1.5, -2.0, 0.0));
+   setVec3(tileShaderPrograms[tileOrder], "pointLights[2].position", glm::vec3( 3.3,  2.0, 0.0));
+   setVec3(tileShaderPrograms[tileOrder], "pointLights[3].position", glm::vec3( 3.3, -2.0, 0.0));
+   setVec3(tileShaderPrograms[tileOrder], "viewPos", camera.cam_pos);
 
-   int V_loc = glGetUniformLocation(tileShaderPrograms[tileOrder], "V");
-   if (V_loc != -1)
-   {
-      glUniformMatrix4fv(V_loc, 1, false, glm::value_ptr(V));
-   }
-
-   int explosionStatus_loc = glGetUniformLocation(tileShaderPrograms[tileOrder], "explosionStatus");
-   if (explosionStatus_loc != -1)
-   {
-	   glUniform1i(explosionStatus_loc, explosionSatus);
-   }
+   setVec3(tileShaderPrograms[tileOrder], "spotLight.position", x, y-0.5, z);
+   setVec3(tileShaderPrograms[tileOrder], "spotLight.direction", glm::vec3(0.0, 1.0, 0.0));
+   setVec3(tileShaderPrograms[tileOrder], "spotLight.ambientComponent", glm::vec3(0.05));
+   setVec3(tileShaderPrograms[tileOrder], "spotLight.diffuseComponent", glm::vec3(0.54, 0.17, 0.89));
+   setVec3(tileShaderPrograms[tileOrder], "spotLight.specularComponent", glm::vec3(1.0));
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.constantTermCoef", 1.0);
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.linearTermCoef", 0.09);
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.quadraticTermCoef", 0.032);
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.innerCutOff", glm::cos(glm::radians(15.0f)));
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.outerCutOff", glm::cos(glm::radians(30.0f)));
+	
 
    glBindVertexArray(tileData[tileOrder].mVao);
    glDrawElements(GL_TRIANGLES, tileData[tileOrder].mNumIndices, GL_UNSIGNED_INT, 0);
 }
+
 
 
 
@@ -258,6 +266,20 @@ void draw_quad(const glm::mat4& P, const glm::mat4& V)
 }
 
 
+void draw_diamond(const glm::mat4& P, const glm::mat4& V, float x, float y, float z)
+{
+	glm::mat4 T = glm::translate(glm::vec3(x, y-0.3, z));
+	glm::mat4 S = glm::scale(glm::vec3(0.3f));
+	glm::mat4 M = T * S;
+	glm::mat4 PVM = P * V * M;
+
+	glUseProgram(diamondShaderPrograms[tileSelection]);
+
+	setMat4(diamondShaderPrograms[tileSelection], "PVM", PVM);
+
+	drawDiamondVAO(diamondVAO);
+}
+
 
 void draw_cube(const glm::mat4& P, const glm::mat4& V)
 {
@@ -291,18 +313,18 @@ void draw_particles(const glm::mat4& P, const glm::mat4& V)
 	glDepthMask(GL_FALSE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-   glUseProgram(particle_shader_program);
-   int PVM_loc = glGetUniformLocation(particle_shader_program, "PVM");
-   if (PVM_loc != -1)
-   {
-      glm::mat4 PVM = P*V;
-      glUniformMatrix4fv(PVM_loc, 1, false, glm::value_ptr(PVM));
-   }
+	glUseProgram(particle_shader_program);
+	int PVM_loc = glGetUniformLocation(particle_shader_program, "PVM");
+	if (PVM_loc != -1)
+	{
+		glm::mat4 PVM = P*V;
+		glUniformMatrix4fv(PVM_loc, 1, false, glm::value_ptr(PVM));
+	}
 
-   draw_particles_vao(particle_vao);
+	draw_particles_vao(particle_vao);
 
-   glDepthMask(GL_TRUE);
-   glDisable(GL_BLEND);
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
 }
 
 
@@ -311,37 +333,46 @@ void draw_particles(const glm::mat4& P, const glm::mat4& V)
 // This function gets called every time the scene gets redisplayed 
 void display()
 {
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the back buffer
-   
-   //glm::mat4 V = glm::lookAt(campos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))*glm::rotate(camangle, glm::vec3(0.0f, 1.0f, 0.0f));
-   glm::mat4 V = camera.getViewMatrix();
-   glm::mat4 P = glm::perspective(80.0f, aspect, 0.1f, 100.0f); //not affine
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear the back buffer
 
-   // draw opaque objects first
-   if (cube_enabled)
-   {
-	   draw_cube(P, V);
-   }
+	//glm::mat4 V = glm::lookAt(campos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))*glm::rotate(camangle, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 V = camera.getViewMatrix();
+	glm::mat4 P = glm::perspective(80.0f, aspect, 0.1f, 100.0f); //not affine
 
-   
-   if(quad_enabled)
-   {
-      draw_quad(P, V);
-   }
-   
-   for (int i = 0; i < TILE_NR; i++)
-   if (tileData[i].drawEnabled)
-   {
-	   draw_fish(P, V, tilePos[i].x, tilePos[i].y, tilePos[i].z, i, tileData[i].explosionStatus);
-   }
+	// draw opaque objects first
+	if (cube_enabled)
+	{
+		draw_cube(P, V);
+	}
 
-   if(particles_enabled)
-   {
-      draw_particles(P, V);
-   }
 
-   draw_gui();
-   glutSwapBuffers();
+	if (quad_enabled)
+	{
+		draw_quad(P, V);
+	}
+
+	for (int i = 0; i < TILE_NR; i++)
+		if (tileData[i].drawEnabled)
+		{
+			draw_fish(P, V, tilePos[i].x, tilePos[i].y, tilePos[i].z, i, tileData[i].explosionStatus);
+		}
+
+	for (int i = 0; i < TILE_NR; i++)
+	{
+		if (i == tileSelection)
+		{
+			draw_diamond(P, V, tilePos[i].x, tilePos[i].y, tilePos[i].z);
+		}
+	}
+	
+
+	if(particles_enabled)
+	{
+		draw_particles(P, V);
+	}
+
+	draw_gui();
+	glutSwapBuffers();
 }
 
 
@@ -400,55 +431,60 @@ void idle()
 
 void printGlInfo()
 {
-   std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-   std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-   std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-   std::cout << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+	std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "GLSL Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 }
 
 
 
 void initOpenGl()
 {
-   glewInit();
+	glewInit();
 
-   glEnable(GL_DEPTH_TEST);
-   glEnable(GL_POINT_SPRITE);       // allows textured points
-   glEnable(GL_PROGRAM_POINT_SIZE); //allows us to set point size in vertex shader
-   glClearColor(0.35f, 0.35f, 0.35f, 0.0f);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_POINT_SPRITE);       // allows textured points
+	glEnable(GL_PROGRAM_POINT_SIZE); //allows us to set point size in vertex shader
+	glClearColor(0.35f, 0.35f, 0.35f, 0.0f);
 
-   // Init relationships between mesh and texuture
-   for (int i = 0; i < tileNames.size(); ++i)
-   {
-	   mesh_texture[tileNames[i]] = textureNames[i];
-   }
+	// fishes
+	for (int i = 0; i < tileNames.size(); ++i)
+	{
+		mesh_texture[tileNames[i]] = textureNames[i];
+	}
 
+	std::random_shuffle(tileNames.begin(), tileNames.end());
 
-   std::random_shuffle(tileNames.begin(), tileNames.end());
+	for (int i = 0; i < TILE_NR; i++)
+	{
+		textureIDs[i] = LoadTexture(mesh_texture[tileNames[i]]);
+		tileShaderPrograms[i] = InitShader(tile_vs_path.c_str(), tile_gs_path.c_str(), tile_fs_path.c_str());
+		tileData[i] = LoadMesh(tileNames[i]);
+	}
 
-   for (int i = 0; i < TILE_NR; i++)
-   {
-	   textureIDs[i] = LoadTexture(mesh_texture[tileNames[i]]);
-	   tileShaderPrograms[i] = InitShader(tile_vs_path.c_str(), tile_gs_path.c_str(), tile_fs_path.c_str());
-	   tileData[i] = LoadMesh(tileNames[i]);
-   }
-
-   cubemap_id = LoadCube(cube_name);
-
-   GLuint tileShaderPrograms[TILE_NR];
-
+	
+	// diamonds
+	for (int i = 0; i < TILE_NR; i++)
+	{
+		diamondShaderPrograms[i] = InitShader(diamond_vs_path.c_str(), diamond_fs_path.c_str());
+		diamondVAO = createDiamondVAO();
+	}
    
-   //mesh and texture to be rendered
    
-   
-   quad_shader_program = InitShader(quad_vs.c_str(), quad_fs.c_str());
-   quad_vao = create_quad_vao();
+	// quad
+	quad_shader_program = InitShader(quad_vs.c_str(), quad_fs.c_str());
+	quad_vao = create_quad_vao();
 
-   cube_shader_program = InitShader(cube_vs.c_str(), cube_fs.c_str());
-   cube_vao = create_cube_vao();
+	// cubemap
+	cubemap_id = LoadCube(cube_name);
 
-   particle_shader_program = InitShader(particle_vs.c_str(), particle_fs.c_str());
-   particle_vao = create_particles_vao();
+	cube_shader_program = InitShader(cube_vs.c_str(), cube_fs.c_str());
+	cube_vao = create_cube_vao();
+
+	// particle
+	particle_shader_program = InitShader(particle_vs.c_str(), particle_fs.c_str());
+	particle_vao = create_particles_vao();
 }
 
 
@@ -494,44 +530,44 @@ void keyboard(unsigned char key, int x, int y)
 
 void keyboard_up(unsigned char key, int x, int y)
 {
-   ImGui_ImplGlut_KeyUpCallback(key);
+	ImGui_ImplGlut_KeyUpCallback(key);
 }
 
 void special_up(int key, int x, int y)
 {
-   ImGui_ImplGlut_SpecialUpCallback(key);
+	ImGui_ImplGlut_SpecialUpCallback(key);
 }
 
 void passive(int x, int y)
 {
-   ImGui_ImplGlut_PassiveMouseMotionCallback(x, y);
+	ImGui_ImplGlut_PassiveMouseMotionCallback(x, y);
 }
 
 void special(int key, int x, int y)
 {
-   ImGui_ImplGlut_SpecialCallback(key);
+	ImGui_ImplGlut_SpecialCallback(key);
 
-   switch (key)
-   {
-   case GLUT_KEY_UP:
-	   upMoveOnBoard();
-	   break;
+	switch (key)
+	{
+	case GLUT_KEY_UP:
+		upMoveOnBoard();
+		break;
 
-   case GLUT_KEY_LEFT:
-	   leftMoveOnBoard();
-	   break;
+	case GLUT_KEY_LEFT:
+		leftMoveOnBoard();
+		break;
 
-   case GLUT_KEY_DOWN:
-	   downMoveOnBoard();
-	   break;
+	case GLUT_KEY_DOWN:
+		downMoveOnBoard();
+		break;
 
-   case GLUT_KEY_RIGHT:
-	   rightMoveOnBoard();
-	   break;
+	case GLUT_KEY_RIGHT:
+		rightMoveOnBoard();
+		break;
 
-   default:
-	   break;
-   }
+	default:
+		break;
+	}
 }
 
 void passiveMotion(int x, int y)
@@ -541,33 +577,33 @@ void passiveMotion(int x, int y)
 
 void motion(int x, int y)
 {
-   ImGui_ImplGlut_MouseMotionCallback(x, y);
+	ImGui_ImplGlut_MouseMotionCallback(x, y);
 
-   if (isMouseFirstClick)
-   {
-	   lastX = x;
-	   lastY = y;
-	   isMouseFirstClick = false;
-   }
+	if (isMouseFirstClick)
+	{
+		lastX = x;
+		lastY = y;
+		isMouseFirstClick = false;
+	}
 
-   float offsetX = x - lastX;
-   float offsetY = lastY - y;
-   lastX = x;
-   lastY = y;
+	float offsetX = x - lastX;
+	float offsetY = lastY - y;
+	lastX = x;
+	lastY = y;
 
-   camera.processMouseMovement(offsetX, offsetY);
+	camera.processMouseMovement(offsetX, offsetY);
 }
 
 void mouse(int button, int state, int x, int y)
 {
-   ImGui_ImplGlut_MouseButtonCallback(button, state);
+	ImGui_ImplGlut_MouseButtonCallback(button, state);
 
 }
 
 void reshape(int w, int h)
 {
-   glViewport(0, 0, w, h);
-   aspect = (float)w / h;
+	glViewport(0, 0, w, h);
+	aspect = (float)w / h;
 }
 
 void mouse_wheel(int wheel, int direction, int x, int y)
@@ -585,7 +621,7 @@ int main(int argc, char **argv)
 
 	printGlInfo();
 
-   //Register callback functions with glut. 
+	//Register callback functions with glut. 
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(special);
@@ -598,11 +634,11 @@ int main(int argc, char **argv)
 	glutReshapeFunc(reshape);
 	glutMouseWheelFunc(mouse_wheel);
 
-   initOpenGl();
-   ImGui_ImplGlut_Init(); // initialize the imgui system
+	initOpenGl();
+	ImGui_ImplGlut_Init(); // initialize the imgui system
 
-   //Enter the glut event loop.
-   glutMainLoop();
-   glutDestroyWindow(win);
-   return 0;
+	//Enter the glut event loop.
+	glutMainLoop();
+	glutDestroyWindow(win);
+	return 0;
 }

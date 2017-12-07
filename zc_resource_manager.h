@@ -8,7 +8,7 @@
 
 #include "LoadTexture.h"
 
-
+// tiles
 const int TILE_NR = 64;
 
 static int tileSelection = 0;
@@ -16,6 +16,14 @@ static int tileSelection = 0;
 static const std::string tile_vs_path("./shaders/zc_explode_vs.glsl");
 static const std::string tile_gs_path("./shaders/zc_explode_gs.glsl");
 static const std::string tile_fs_path("./shaders/zc_explode_fs.glsl");
+
+// diamonds
+
+static const std::string diamond_vs_path("./shaders/zc_diamond_vs.glsl");
+static const std::string diamond_fs_path("./shaders/zc_diamond_fs.glsl");
+//GLuint diamondShaderProgram = -1;
+GLuint diamondVAO = -1;
+//bool diamondEnabled = false;
 
 std::vector<glm::vec3> tilePos =
 {
@@ -29,22 +37,9 @@ std::vector<glm::vec3> tilePos =
 	{ -1.2f, -1.75f,  0.0f },{ -0.6f, -1.75f,  0.0f },{ 0.0f, -1.75f,  0.0f },{ 0.6f, -1.75f,  0.0f },{ 1.2f, -1.75f,  0.0f },{ 1.8f, -1.75f,  0.0f },{ 2.4f, -1.75f,  0.0f },{ 3.0f, -1.75f,  0.0f },
 };
 
-
-std::vector<glm::vec3> spotLightPos =
-{
-	{ -1.2f,  1.75f,  3.0f },{ -0.6f,  1.75f,  0.0f },{ 0.0f,  1.75f,  0.0f },{ 0.6f,  1.75f,  0.0f },{ 1.2f,  1.75f,  0.0f },{ 1.8f,  1.75f,  0.0f },{ 2.4f,  1.75f,  0.0f },{ 3.0f,  1.75f,  0.0f },
-	{ -1.2f,  1.25f,  0.0f },{ -0.6f,  1.25f,  0.0f },{ 0.0f,  1.25f,  0.0f },{ 0.6f,  1.25f,  0.0f },{ 1.2f,  1.25f,  0.0f },{ 1.8f,  1.25f,  0.0f },{ 2.4f,  1.25f,  0.0f },{ 3.0f,  1.25f,  0.0f },
-	{ -1.2f,  0.75f,  0.0f },{ -0.6f,  0.75f,  0.0f },{ 0.0f,  0.75f,  0.0f },{ 0.6f,  0.75f,  0.0f },{ 1.2f,  0.75f,  0.0f },{ 1.8f,  0.75f,  0.0f },{ 2.4f,  0.75f,  0.0f },{ 3.0f,  0.75f,  0.0f },
-	{ -1.2f,  0.25f,  0.0f },{ -0.6f,  0.25f,  0.0f },{ 0.0f,  0.25f,  0.0f },{ 0.6f,  0.25f,  0.0f },{ 1.2f,  0.25f,  0.0f },{ 1.8f,  0.25f,  0.0f },{ 2.4f,  0.25f,  0.0f },{ 3.0f,  0.25f,  0.0f },
-	{ -1.2f, -0.25f,  0.0f },{ -0.6f, -0.25f,  0.0f },{ 0.0f, -0.25f,  0.0f },{ 0.6f, -0.25f,  0.0f },{ 1.2f, -0.25f,  0.0f },{ 1.8f, -0.25f,  0.0f },{ 2.4f, -0.25f,  0.0f },{ 3.0f, -0.25f,  0.0f },
-	{ -1.2f, -0.75f,  0.0f },{ -0.6f, -0.75f,  0.0f },{ 0.0f, -0.75f,  0.0f },{ 0.6f, -0.75f,  0.0f },{ 1.2f, -0.75f,  0.0f },{ 1.8f, -0.75f,  0.0f },{ 2.4f, -0.75f,  0.0f },{ 3.0f, -0.75f,  0.0f },
-	{ -1.2f, -1.25f,  0.0f },{ -0.6f, -1.25f,  0.0f },{ 0.0f, -1.25f,  0.0f },{ 0.6f, -1.25f,  0.0f },{ 1.2f, -1.25f,  0.0f },{ 1.8f, -1.25f,  0.0f },{ 2.4f, -1.25f,  0.0f },{ 3.0f, -1.25f,  0.0f },
-	{ -1.2f, -1.75f,  0.0f },{ -0.6f, -1.75f,  0.0f },{ 0.0f, -1.75f,  0.0f },{ 0.6f, -1.75f,  0.0f },{ 1.2f, -1.75f,  0.0f },{ 1.8f, -1.75f,  0.0f },{ 2.4f, -1.75f,  0.0f },{ 3.0f, -1.75f,  0.0f },
-};
-
-
 //Mahjong files and IDs
 GLuint tileShaderPrograms[TILE_NR];
+GLuint diamondShaderPrograms[TILE_NR];
 
 std::unordered_map<std::string, std::string> mesh_texture;
 static std::vector<std::string> tileNames =

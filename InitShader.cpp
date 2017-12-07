@@ -1,6 +1,8 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <GL/freeglut_ext.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -256,4 +258,47 @@ GLuint InitShader(const char* vShaderFile, const char* gShaderFile, const char* 
    glUseProgram(program);
 
    return program;
+}
+
+
+// utility functions
+
+void setBool(GLuint shaderProgram, std::string vertexAttri, bool value)
+{
+	glUniform1i(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), (int)value);
+}
+
+void setInt(GLuint shaderProgram, std::string vertexAttri, int value)
+{
+	glUniform1i(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), value);
+}
+
+void setFloat(GLuint shaderProgram, std::string vertexAttri, float value)
+{
+	glUniform1f(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), value);
+}
+
+void setMat4(GLuint shaderProgram, std::string vertexAttri, glm::mat4 value)
+{
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), 1, false, glm::value_ptr(value));
+}
+
+void setVec3(GLuint shaderProgram, std::string vertexAttri, glm::vec3 value)
+{
+	glUniform3fv(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), 1, glm::value_ptr(value));
+}
+
+void setVec3(GLuint shaderProgram, std::string vertexAttri, float x, float y, float z)
+{
+	glUniform3f(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), x, y, z);
+}
+
+void setVec4(GLuint shaderProgram, std::string vertexAttri, glm::vec4 value)
+{
+	glUniform4fv(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), 1, &value[0]);
+}
+
+void setVec4(GLuint shaderProgram, std::string vertexAttri, float x, float y, float z, float w)
+{
+	glUniform4f(glGetUniformLocation(shaderProgram, vertexAttri.c_str()), x, y, z, w);
 }

@@ -17,8 +17,8 @@ uniform float slider;
 uniform float time;
 uniform float f;
 
-out vec4 fragcolor;           
-in vec2 tex_coord;
+out vec4 fragcolor//;           
+in vec2 tex_coord;//
 
 in vec3 normal;   //World-space normal vector
 in vec3 p;        //World-space fragment position

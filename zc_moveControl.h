@@ -55,6 +55,8 @@ void selectTile()
 
 		}
 
+		tileData[firstSelectionNr].holdStatus = false;
+
 	
 		tilesSimulSelectNr = 0;
 		firstSelectionNr = -1;
@@ -65,3 +67,5 @@ void selectTile()
 
 	debug(tilesSimulSelectNr);
 }
+
+static bool diamond_enabled = true;

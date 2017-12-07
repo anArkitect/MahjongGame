@@ -85,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="zc_diamond.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
     <ClCompile Include="include\imgui\imgui_demo.cpp" />
     <ClCompile Include="include\imgui\imgui_draw.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="zc_debug.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="zc_diamond.h" />
     <ClInclude Include="zc_resource_manager.h" />
     <ClInclude Include="zc_moveControl.h" />
     <ClInclude Include="zc_glutInit.h" />

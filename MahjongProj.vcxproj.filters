@@ -17,6 +17,9 @@
     <ClCompile Include="InitShader.cpp">
       <Filter>Headers</Filter>
     </ClCompile>
+    <ClCompile Include="zc_diamond.cpp">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h">
@@ -74,6 +77,9 @@
       <Filter>Headers\ZhiwenLibs</Filter>
     </ClInclude>
     <ClInclude Include="zc_debug.h">
+      <Filter>Headers\ZhiwenLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="zc_diamond.h">
       <Filter>Headers\ZhiwenLibs</Filter>
     </ClInclude>
   </ItemGroup>
