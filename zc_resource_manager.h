@@ -8,6 +8,20 @@
 
 #include "LoadTexture.h"
 
+// game
+static bool gameRestartAllowed = false;
+static bool isGameRestarted = false;
+
+// time
+static bool game_enabled = false;
+static int timeUsed = 0;
+static bool timeUsedAllowed = false;
+static int pausePointTime = 0;
+static int continuePointTime = 0;
+static int afterContinueTime = 0;
+static int afterPauseTime = 0;
+
+
 // tiles
 const int TILE_NR = 64;
 
@@ -18,8 +32,8 @@ static const std::string tile_gs_path("./shaders/zc_explode_gs.glsl");
 static const std::string tile_fs_path("./shaders/zc_explode_fs.glsl");
 
 // diamonds
-
 static const std::string diamond_vs_path("./shaders/zc_diamond_vs.glsl");
+static const std::string diamond_gs_path("./shaders/zc_diamond_gs.glsl");
 static const std::string diamond_fs_path("./shaders/zc_diamond_fs.glsl");
 //GLuint diamondShaderProgram = -1;
 GLuint diamondVAO = -1;

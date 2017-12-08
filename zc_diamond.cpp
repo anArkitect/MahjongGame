@@ -5,7 +5,7 @@ GLuint createDiamondVAO()
 	GLuint VAO, VBO, EBO;
 
 	const float diamondVertices[] = {
-		0.2,	0.0,	0.0,
+		0.2,	0.0,	0.0,	
 		0.0,	0.0,	-0.2,
 		-0.2,	0.0,	0.0,
 		0.0,	0.0,	0.2,
@@ -41,12 +41,11 @@ GLuint createDiamondVAO()
 	GLint shader_program = -1;
 	glGetIntegerv(GL_CURRENT_PROGRAM, &shader_program);
 
-	//get a reference to an attrib variable name in a shader
+	// get a reference to location of an attrib variable name in a shader
+	// then enable this attribute
+	// set the pointer
 	GLint pos_loc = glGetAttribLocation(shader_program, "aPos");
-
 	glEnableVertexAttribArray(pos_loc); //enable this attribute
-
-										//tell opengl how to get the attribute values out of the vbo (stride and offset)
 	glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	glBindVertexArray(0); //unbind the vao
 

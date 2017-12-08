@@ -39,10 +39,9 @@ vec3 GetNormal()
 
 void main() {
 	
-
 		vec3 normal = GetNormal();
 
-		if (explosionStatus)
+		if (explosionStatus>0)
 			gl_Position = explode(gl_in[0].gl_Position, normal);
 		else
 			gl_Position = gl_in[0].gl_Position;	
@@ -55,7 +54,7 @@ void main() {
 		}
 			
 		
-		if (explosionStatus) 
+		if (explosionStatus>0) 
 			gl_Position = explode(gl_in[1].gl_Position, normal);
 		else
 			gl_Position = gl_in[1].gl_Position;	
@@ -68,7 +67,7 @@ void main() {
 		}
 
 
-		if (explosionStatus) 
+		if (explosionStatus>0) 
 			gl_Position = explode(gl_in[2].gl_Position, normal);
 		else
 			gl_Position = gl_in[2].gl_Position;	

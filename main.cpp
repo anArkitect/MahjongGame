@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <cstdlib>
+#include <ctime>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -12,6 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <irrklang/irrKlang.h>
 
 #include "InitShader.h"
 #include "LoadMesh.h"
@@ -80,93 +84,140 @@ float aspect = 1.0f;
 
 void draw_gui()
 {
-  // glUseProgram(tileShaderPrograms);
-   static bool first_frame = true;
-   ImGui_ImplGlut_NewFrame();
-   static bool show_window = true;
+	// glUseProgram(tileShaderPrograms);
+	static bool first_frame = true;
+	ImGui_ImplGlut_NewFrame();
+	static bool show_window = true;
 
-   ImGui::Begin("Zhiwen Cao", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("Zhiwen Cao", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
-   ImGui::Checkbox("Draw quad", &quad_enabled); ImGui::SameLine();
-   ImGui::Checkbox("Draw cube", &cube_enabled); ImGui::SameLine();
-   ImGui::Checkbox("Draw particles", &particles_enabled); 
+	//ImGui::SliderFloat("Shininess", &shininess, 10.0f, 50.0f);
+	ImGui::Text("Press 'P' to Play / Pause the game");
+	ImGui::Text("Press 'R' to Restart      the game");
 
-   //ImGui::SliderFloat("View angle", &camangle, -180.0f, +180.0f);
-   //ImGui::SliderFloat("Cam Z", &campos[2], 0.0f, 5.0f);
-   ImGui::SliderFloat("Shininess", &shininess, 10.0f, 50.0f);
+	ImGui::Checkbox("Game Proceed", &game_enabled);
 
-   /*
-   static float slider = 0.0;
+	if (game_enabled)
+	{
+		afterContinueTime = glutGet(GLUT_ELAPSED_TIME) * 0.001 - continuePointTime;
+		if (isGameRestarted)
+		{
+			timeUsed = 0;
+			afterContinueTime = 0;
+			isGameRestarted = false;
+			continuePointTime = glutGet(GLUT_ELAPSED_TIME) * 0.001;
+		}
+		ImGui::Text("Time Used: %d", timeUsed + afterContinueTime);
+		
 
-   if (ImGui::SliderFloat("Slider", &slider, 0.0f, +2.0f) || first_frame)
-   {
-      int slider_loc = glGetUniformLocation(tileShaderPrograms, "slider");
-      if (slider_loc != -1)
-      {
-         glUniform1f(slider_loc, slider);
-      }
-   }
+		pausePointTime = glutGet(GLUT_ELAPSED_TIME) * 0.001;
+	}
+	else
+	{
+		if (timeUsedAllowed)
+		{
+			timeUsed += afterContinueTime;
+			timeUsedAllowed = false;
+		}
+		afterPauseTime = glutGet(GLUT_ELAPSED_TIME) * 0.001 - pausePointTime;
+		ImGui::Text("Time Used: %d", timeUsed);
+		continuePointTime = glutGet(GLUT_ELAPSED_TIME) * 0.001;
+	}
 
-   static float alpha = 10.0f;
-   if (ImGui::SliderFloat("Dullness", &alpha, 1.0f, 100.0f))
-   {
-      int alpha_loc = glGetUniformLocation(tileShaderPrograms, "alpha");
-      if (alpha_loc != -1)
-      {
-         glUniform1f(alpha_loc, alpha);
-      }
-   }
+	
 
-   static float f = 0.0f;
-   if (ImGui::SliderFloat("Wrap", &f, 0.0f, 1.0f))
-   {
-      int f_loc = glGetUniformLocation(tileShaderPrograms, "f");
-      if (f_loc != -1)
-      {
-         glUniform1f(f_loc, f);
-      }
-   }
+	/*if (game_enabled)
+	{
+		durationTime = glutGet(GLUT_ELAPSED_TIME) * 0.001 - gameStartTime;
+		timeUsedAllowed = true;
+		ImGui::Text("Time Used: %d", timeUsed + durationTime);
+	}
+	else
+	{
+		gameStartTime = glutGet(GLUT_ELAPSED_TIME) * 0.001;
+		if (timeUsedAllowed)
+		{
+			timeUsed += durationTime;
+			timeUsedAllowed = false;
+		}
+		ImGui::Text("Time Used: %d", timeUsed);
+		
+	}*/
 
-   static bool use_texture = true;
-   if (ImGui::Checkbox("Use Texture", &use_texture))
-   {
-      int use_tex_loc = glGetUniformLocation(tileShaderPrograms, "use_texture");
-      if (use_tex_loc != -1)
-      { 
-         glUniform1i(use_tex_loc, use_texture);
-      }
-   }
+	/*
+	static float slider = 0.0;
 
-  // glBindTexture(GL_TEXTURE_2D, textureIDs);
+	if (ImGui::SliderFloat("Slider", &slider, 0.0f, +2.0f) || first_frame)
+	{
+		int slider_loc = glGetUniformLocation(tileShaderPrograms, "slider");
+		if (slider_loc != -1)
+		{
+			glUniform1f(slider_loc, slider);
+		}
+	}
 
-   const GLenum magnification_modes[2] = {GL_NEAREST, GL_LINEAR};
-   const char* magnification_modes_labels[] = { "GL_NEAREST", "GL_LINEAR" };
-   static int current_magnification_mode = 0;
-   if(ImGui::Combo("Texture mag filter", &current_magnification_mode, magnification_modes_labels, 2))
-   {
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magnification_modes[current_magnification_mode]);
-   }
+	static float alpha = 10.0f;
+	if (ImGui::SliderFloat("Dullness", &alpha, 1.0f, 100.0f))
+	{
+		int alpha_loc = glGetUniformLocation(tileShaderPrograms, "alpha");
+		if (alpha_loc != -1)
+		{
+			glUniform1f(alpha_loc, alpha);
+		}
+	}
+
+	static float f = 0.0f;
+	if (ImGui::SliderFloat("Wrap", &f, 0.0f, 1.0f))
+	{
+		int f_loc = glGetUniformLocation(tileShaderPrograms, "f");
+		if (f_loc != -1)
+		{
+			glUniform1f(f_loc, f);
+		}
+	}
+
+	static bool use_texture = true;
+	if (ImGui::Checkbox("Use Texture", &use_texture))
+	{
+		int use_tex_loc = glGetUniformLocation(tileShaderPrograms, "use_texture");
+		if (use_tex_loc != -1)
+		{ 
+			glUniform1i(use_tex_loc, use_texture);
+		}
+	}
+
+	// glBindTexture(GL_TEXTURE_2D, textureIDs);
+
+	const GLenum magnification_modes[2] = {GL_NEAREST, GL_LINEAR};
+	const char* magnification_modes_labels[] = { "GL_NEAREST", "GL_LINEAR" };
+	static int current_magnification_mode = 0;
+	if(ImGui::Combo("Texture mag filter", &current_magnification_mode, magnification_modes_labels, 2))
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magnification_modes[current_magnification_mode]);
+	}
    
-   const GLenum minification_modes[4] = { GL_NEAREST, GL_LINEAR, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR };
-   const char* minfication_modes_labels[] = { "GL_NEAREST", "GL_LINEAR", "GL_NEAREST_MIPMAP_LINEAR", "GL_LINEAR_MIPMAP_LINEAR" };
-   static int current_minification_mode = 0;
-   if (ImGui::Combo("Texture min filter", &current_minification_mode, minfication_modes_labels, 4))
-   {
-	   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minification_modes[current_minification_mode]);
-   }
-   */
-   ImGui::End();
+	const GLenum minification_modes[4] = { GL_NEAREST, GL_LINEAR, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR };
+	const char* minfication_modes_labels[] = { "GL_NEAREST", "GL_LINEAR", "GL_NEAREST_MIPMAP_LINEAR", "GL_LINEAR_MIPMAP_LINEAR" };
+	static int current_minification_mode = 0;
+	if (ImGui::Combo("Texture min filter", &current_minification_mode, minfication_modes_labels, 4))
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minification_modes[current_minification_mode]);
+	}
+	*/
+	ImGui::End();
 
 
 
-   ImGui::Render();
-   first_frame = false;
+	ImGui::Render();
+	first_frame = false;
 }
 
 
 
 void draw_fish(const glm::mat4& P, const glm::mat4& V, float x, float y, float z, int tileOrder, bool explosionSatus)
 {
+	//float timeMS = glutGet(GLUT_ELAPSED_TIME);
+	//float timeS = timeMS * 0.001;
 
    glm::mat4 T = glm::translate(glm::vec3(x, y, z));
    glm::mat4 S = glm::scale(glm::vec3(0.5f*tileData[tileOrder].mScaleFactor));
@@ -183,7 +234,7 @@ void draw_fish(const glm::mat4& P, const glm::mat4& V, float x, float y, float z
    glActiveTexture(GL_TEXTURE1);
    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_id);
    setInt(tileShaderPrograms[tileOrder], "material.cubemap", 1);
-
+   //setVec3(tileShaderPrograms[tileOrder], "midPoint", x + glm::sin(timeS) * 5, y, z + glm::cos(timeS) * 5);
    setMat4(tileShaderPrograms[tileOrder], "PVM", P*V*M);
    setMat4(tileShaderPrograms[tileOrder], "M", M);
    setMat4(tileShaderPrograms[tileOrder], "transInverModel", transInverModel);
@@ -204,14 +255,14 @@ void draw_fish(const glm::mat4& P, const glm::mat4& V, float x, float y, float z
 
    setVec3(tileShaderPrograms[tileOrder], "spotLight.position", x, y-0.5, z);
    setVec3(tileShaderPrograms[tileOrder], "spotLight.direction", glm::vec3(0.0, 1.0, 0.0));
-   setVec3(tileShaderPrograms[tileOrder], "spotLight.ambientComponent", glm::vec3(0.05));
+   setVec3(tileShaderPrograms[tileOrder], "spotLight.ambientComponent", glm::vec3(0.1));
    setVec3(tileShaderPrograms[tileOrder], "spotLight.diffuseComponent", glm::vec3(0.54, 0.17, 0.89));
    setVec3(tileShaderPrograms[tileOrder], "spotLight.specularComponent", glm::vec3(1.0));
    setFloat(tileShaderPrograms[tileOrder], "spotLight.constantTermCoef", 1.0);
    setFloat(tileShaderPrograms[tileOrder], "spotLight.linearTermCoef", 0.09);
    setFloat(tileShaderPrograms[tileOrder], "spotLight.quadraticTermCoef", 0.032);
-   setFloat(tileShaderPrograms[tileOrder], "spotLight.innerCutOff", glm::cos(glm::radians(15.0f)));
-   setFloat(tileShaderPrograms[tileOrder], "spotLight.outerCutOff", glm::cos(glm::radians(30.0f)));
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.innerCutOff", glm::cos(glm::radians(25.0f)));
+   setFloat(tileShaderPrograms[tileOrder], "spotLight.outerCutOff", glm::cos(glm::radians(50.0f)));
 	
 
    glBindVertexArray(tileData[tileOrder].mVao);
@@ -272,10 +323,19 @@ void draw_diamond(const glm::mat4& P, const glm::mat4& V, float x, float y, floa
 	glm::mat4 S = glm::scale(glm::vec3(0.3f));
 	glm::mat4 M = T * S;
 	glm::mat4 PVM = P * V * M;
+	glm::mat4 transInverModel = glm::transpose(glm::inverse(M));
 
 	glUseProgram(diamondShaderPrograms[tileSelection]);
 
 	setMat4(diamondShaderPrograms[tileSelection], "PVM", PVM);
+	setMat4(diamondShaderPrograms[tileSelection], "M", M);
+	setMat4(diamondShaderPrograms[tileSelection], "transInverModel", transInverModel);
+	setVec3(diamondShaderPrograms[tileSelection], "eyePos", camera.cam_pos);
+	
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_id);
+	setInt(diamondShaderPrograms[tileSelection], "cubemap", 0);
 
 	drawDiamondVAO(diamondVAO);
 }
@@ -352,14 +412,14 @@ void display()
 	}
 
 	for (int i = 0; i < TILE_NR; i++)
-		if (tileData[i].drawEnabled)
+		if (tileData[i].drawEnabled && game_enabled)
 		{
 			draw_fish(P, V, tilePos[i].x, tilePos[i].y, tilePos[i].z, i, tileData[i].explosionStatus);
 		}
 
 	for (int i = 0; i < TILE_NR; i++)
 	{
-		if (i == tileSelection)
+		if (i == tileSelection && game_enabled)
 		{
 			draw_diamond(P, V, tilePos[i].x, tilePos[i].y, tilePos[i].z);
 		}
@@ -417,6 +477,7 @@ void idle()
 			//double check that you are using glUniform1f
 			glUniform1f(time_loc, time_sec);
 		}
+
 		glUseProgram(particle_shader_program);
 		time_loc = glGetUniformLocation(particle_shader_program, "time");
 		if (time_loc != -1)
@@ -424,6 +485,9 @@ void idle()
 			//double check that you are using glUniform1f
 			glUniform1f(time_loc, time_sec);
 		}
+
+		glUseProgram(diamondShaderPrograms[i]);
+		setFloat(diamondShaderPrograms[i], "time", time_sec);
 	}
 }
 
@@ -438,6 +502,7 @@ void printGlInfo()
 }
 
 
+int myrandom(int i) { return std::rand() % i; }
 
 void initOpenGl()
 {
@@ -449,12 +514,11 @@ void initOpenGl()
 	glClearColor(0.35f, 0.35f, 0.35f, 0.0f);
 
 	// fishes
-	for (int i = 0; i < tileNames.size(); ++i)
-	{
-		mesh_texture[tileNames[i]] = textureNames[i];
-	}
 
-	std::random_shuffle(tileNames.begin(), tileNames.end());
+
+	srand(time(NULL));
+	std::random_shuffle(tileNames.begin(), tileNames.end(), myrandom);
+
 
 	for (int i = 0; i < TILE_NR; i++)
 	{
@@ -463,18 +527,20 @@ void initOpenGl()
 		tileData[i] = LoadMesh(tileNames[i]);
 	}
 
-	
+
+
 	// diamonds
 	for (int i = 0; i < TILE_NR; i++)
 	{
-		diamondShaderPrograms[i] = InitShader(diamond_vs_path.c_str(), diamond_fs_path.c_str());
+		diamondShaderPrograms[i] = InitShader(diamond_vs_path.c_str(), diamond_gs_path.c_str(), diamond_fs_path.c_str());
+		//diamondShaderPrograms[i] = InitShader(diamond_vs_path.c_str(), diamond_fs_path.c_str());
 		diamondVAO = createDiamondVAO();
 	}
    
    
-	// quad
-	quad_shader_program = InitShader(quad_vs.c_str(), quad_fs.c_str());
-	quad_vao = create_quad_vao();
+	// legacy: quad
+	//quad_shader_program = InitShader(quad_vs.c_str(), quad_fs.c_str());
+	//quad_vao = create_quad_vao();
 
 	// cubemap
 	cubemap_id = LoadCube(cube_name);
@@ -521,6 +587,29 @@ void keyboard(unsigned char key, int x, int y)
 		case 'd':
 		case 'D':
 			camera.processKeyboard(CAMERA_RIGHT, deltaTime);
+			break;
+
+		case 'p':
+		case 'P':
+			if (game_enabled)
+			{
+				game_enabled = false;
+				playSoundEffect("sounds/pauseSound.wav");
+			}
+			else
+			{
+				game_enabled = true;
+				playSoundEffect("sounds/pauseSound.wav");
+			}
+				
+			timeUsedAllowed = true;
+			break;
+
+		case 'r':
+		case 'R':
+			initOpenGl();
+			isGameRestarted = true;
+			playSoundEffect("sounds/startSound.wav");
 			break;
 
 		default:
@@ -633,6 +722,13 @@ int main(int argc, char **argv)
 	glutIdleFunc(idle);
 	glutReshapeFunc(reshape);
 	glutMouseWheelFunc(mouse_wheel);
+
+
+	playSoundEffect("sounds/backgroundSound.mp3", true);
+	for (int i = 0; i < tileNames.size(); ++i)
+	{
+		mesh_texture[tileNames[i]] = textureNames[i];
+	}
 
 	initOpenGl();
 	ImGui_ImplGlut_Init(); // initialize the imgui system

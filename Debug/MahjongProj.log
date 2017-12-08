@@ -1,19 +1,40 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Imgui demo.vcxproj, Mahjong.vcxproj, TextureAndAlpha.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  zc_glutInit.cpp
+  LoadTexture.cpp
+  LoadMesh.cpp
   main.cpp
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\zc_resource_manager.h(95): warning C4838: conversion from 'int' to 'GLuint' requires a narrowing conversion
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(205): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(207): warning C4305: 'argument': truncation from 'double' to 'const float'
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(211): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(212): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(384): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(385): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(452): warning C4018: '<': signed/unsigned mismatch
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(584): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(585): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(591): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(592): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(611): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\zc_resource_manager.h(109): warning C4838: conversion from 'int' to 'GLuint' requires a narrowing conversion
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(102): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(108): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(113): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(122): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(124): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(256): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(258): warning C4305: 'argument': truncation from 'double' to 'const float'
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(262): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(263): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(444): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(445): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(519): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(673): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(674): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(680): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(681): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(700): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\main.cpp(728): warning C4018: '<': signed/unsigned mismatch
   GLM: perspective function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
   GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
+  Quad.cpp
+  Particles.cpp
+  InitShader.cpp
+  imgui_impl_glut.cpp
+  imgui_draw.cpp
+  imgui_demo.cpp
+  imgui.cpp
+  zc_diamond.cpp
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\zc_diamond.cpp(14): warning C4838: conversion from 'double' to 'const float' requires a narrowing conversion
+c:\users\zhiwen cao\documents\purdue\cgt520\mahjongproject\zc_diamond.cpp(14): warning C4305: 'initializing': truncation from 'double' to 'const float'
+  Cube.cpp
+  Generating Code...
   MahjongProj.vcxproj -> C:\Users\Zhiwen Cao\Documents\PURDUE\CGT520\MahjongProject\Debug\MahjongProj.exe
   MahjongProj.vcxproj -> C:\Users\Zhiwen Cao\Documents\PURDUE\CGT520\MahjongProject\Debug\MahjongProj.pdb (Partial PDB)
