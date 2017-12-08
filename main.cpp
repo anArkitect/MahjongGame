@@ -34,8 +34,8 @@
 #include "zc_diamond.h"
 
 
-const float SCR_WIDTH = 1200.0f;
-const float SCR_HEIGHT = 800.0f;
+const float SCR_WIDTH = 1280.0f;
+const float SCR_HEIGHT = 720.0f;
 
 static const std::string cube_name = "cubemap";
 GLuint cubemap_id = -1; //Texture id for cubemap
@@ -89,7 +89,7 @@ void draw_gui()
 	ImGui_ImplGlut_NewFrame();
 	static bool show_window = true;
 
-	ImGui::Begin("Zhiwen Cao", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("GAME MENU", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 	//ImGui::SliderFloat("Shininess", &shininess, 10.0f, 50.0f);
 	ImGui::Text("Press 'P' to Play / Pause the game");
